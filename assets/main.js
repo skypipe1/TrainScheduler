@@ -22,7 +22,7 @@ var trainTime;
 
 
 // On Click
-console.log($("#submitBtn"));
+
 $("#submitBtn").on("click",function(event){
     event.preventDefault();
 
@@ -32,17 +32,42 @@ $("#submitBtn").on("click",function(event){
     trainTime = $("#firstTrainTime").val().trim();
     frequencys = $("#frequency").val().trim();
 
-    // push to database
-    database.ref("/trainData").set({
-        TrainName:trainNames,
-        destinations:destinations,
-        trainTime: trainTime,
-        frequency: frequencys
+    // push to database look into push method
+    database.ref("/trainData").push({
+        "TrainName":trainNames,
+        "destinations":destinations,
+        "trainTime": trainTime,
+        "frequency": frequencys
     });
     console.log(trainNames);
     console.log(destinations);
     console.log(trainTime);
     console.log(frequencys);
+
+    $("#trainName").val("")
+    $("#destination").val("")
+    $("#firstTrainTime").val("")
+    $("#frequency").val("")
+});
+
+database.ref("/trainData").on("child_added", function(childSnapshot){
+    // var startingDate = snapshot.val().startdates;
+
+    // var monthsWorked = moment().diff(startingDate, "months");
+
+    // var totalBilled = monthsWorked * (snapshot.val().monthlyRates);
+
+
+    var tableRow = $("<tr><td scope='col'>" + childSnapshot.val().TrainName + "</td>" +
+                 "<td scope='col'>" + childSnapshot.val().destinations + "</td>" +
+                 "<td scope='col'>" + childSnapshot.val().frequency + "</td>" +
+                 "<td scope='col'>" + "Next Arrival" + "</td>" +
+                 "<td scope='col'>" + "minuets away"  + "</td></tr>");
+
+
+    $("#tableBody").append(tableRow);
+}, function (errorObject){
+    console.log("Errors handled:"+ errorObject.code)
 });
 
 // javascript time math to determine how many minutes away the train is
