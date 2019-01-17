@@ -9,12 +9,19 @@ var config = {
 
 firebase.initializeApp(config);
 
-var database = firebase.database(); 
+var database = firebase.database();
+//   variable for train name 
 var trainNames;
+//   variable for Destination
 var destinations;
+//   variable for Frequency
 var frequencys = 0;
+// train time
 var trainTime;
+//   variable for minutes away?
 
+
+// On Click
 
 $("#submitBtn").on("click", function (event) {
     event.preventDefault();
@@ -44,8 +51,7 @@ $("#submitBtn").on("click", function (event) {
 });
 
 database.ref("/trainData").on("child_added", function (childSnapshot) {
-
-    // First Time (pushed back 1 year to make sure it comes before current time)
+    // var startingDate = snapshot.val().startdates;
     var firstTimeConverted = moment(trainTime, "HH:mm").subtract(1, "years");
     console.log(firstTimeConverted);
 
@@ -65,23 +71,28 @@ database.ref("/trainData").on("child_added", function (childSnapshot) {
     var tMinutesTillTrain = frequencys - tRemainder;
     console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
 
-    // next train
-    var nextTrain = moment().add(tMinutesTillTrain, "minutes").format("hh:mm a");
-    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm a"));
+    
+
+
+
+    // var monthsWorked = moment().diff(startingDate, "months");
+
+    // var totalBilled = monthsWorked * (snapshot.val().monthlyRates);
 
 
     var tableRow = $("<tr><td scope='col'>" + childSnapshot.val().TrainName + "</td>" +
         "<td scope='col'>" + childSnapshot.val().destinations + "</td>" +
         "<td scope='col'>" + childSnapshot.val().frequency + "</td>" +
-        "<td scope='col'>" + nextTrain + "</td>" +
-        "<td scope='col'>" + tMinutesTillTrain + "</td></tr>");
+        "<td scope='col'>" + "Next Arrival" + "</td>" +
+        "<td scope='col'>" + "minuets away" + "</td></tr>");
 
 
-        $("#tableBody").append(tableRow);
-    }, function (errorObject) {
-        console.log("Errors handled:" + errorObject.code)
+    $("#tableBody").append(tableRow);
+}, function (errorObject) {
+    console.log("Errors handled:" + errorObject.code)
 });
 
+// javascript time math to determine how many minutes away the train is
 
 
 
