@@ -1,4 +1,3 @@
-
 var config = {
     apiKey: "AIzaSyDSYhc7VlQZo9LEbjZvBPojFJ7mv6gDiJg",
     authDomain: "class11418.firebaseapp.com",
@@ -23,13 +22,14 @@ var trainTime;
 
 
 // On Click
+console.log($("#submitBtn"));
 $("#submitBtn").on("click",function(event){
     event.preventDefault();
 
     // retreving train data from input
     trainNames = $("#trainName").val().trim();
     destinations = $("#destination").val().trim();
-    trainTime = $("firstTrainTime").val().trim();
+    trainTime = $("#firstTrainTime").val().trim();
     frequencys = $("#frequency").val().trim();
 
     // push to database
@@ -43,7 +43,6 @@ $("#submitBtn").on("click",function(event){
     console.log(destinations);
     console.log(trainTime);
     console.log(frequencys);
-
 });
 
 // javascript time math to determine how many minutes away the train is
