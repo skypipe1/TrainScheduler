@@ -31,11 +31,9 @@ $("#submitBtn").on("click", function (event) {
         "destinations": destinations,
         "trainTime": trainTime,
         "frequency": frequencys
+        
     });
-    console.log(trainNames);
-    console.log(destinations);
-    console.log(trainTime);
-    console.log(frequencys);
+
 
     $("#trainName").val("");
     $("#destination").val("");
@@ -44,9 +42,9 @@ $("#submitBtn").on("click", function (event) {
 });
 
 database.ref("/trainData").on("child_added", function (childSnapshot) {
-
+    console.log(childSnapshot.val());
     // First Time (pushed back 1 year to make sure it comes before current time)
-    var firstTimeConverted = moment(trainTime, "HH:mm").subtract(1, "years");
+    var firstTimeConverted = moment(childSnapshot.val().trainTime, "HH:mm").subtract(1, "years");
     console.log(firstTimeConverted);
 
     // Current Time
@@ -54,15 +52,15 @@ database.ref("/trainData").on("child_added", function (childSnapshot) {
     console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
 
     // Difference between the times
-    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-    console.log("DIFFERENCE IN TIME: " + diffTime);
+    var diffTime = moment().diff(firstTimeConverted, "minutes");
+    console.log("DIFFERENCE IN TIME: " + (diffTime));
 
     // Time apart (remainder)
-    var tRemainder = diffTime % frequencys;
+    var tRemainder = diffTime % childSnapshot.val().frequency;
     console.log(tRemainder);
 
     // Minute Until Train
-    var tMinutesTillTrain = frequencys - tRemainder;
+    var tMinutesTillTrain = childSnapshot.val().frequency - tRemainder;
     console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
 
     // next train
